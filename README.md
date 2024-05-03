@@ -7,7 +7,7 @@ This is a practice of sls with user CRUD
 ```bash
 
   npm install
-
+  sls dynamodb install
   sls offline start
 
 ```
