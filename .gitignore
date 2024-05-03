@@ -1,0 +1,18 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# packages  lock
+package-lock.*
+
+# Serverless directories
+.serverless/
+
+# DynamoDB Local files
+.dynamodb/
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# Env file
+.env

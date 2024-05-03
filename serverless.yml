@@ -1,0 +1,69 @@
+service: user-crud
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:DeleteItem
+            - dynamodb:GetItem
+            - dynamodb:Scan
+          Resource: "*"
+
+plugins:
+  - serverless-dynamodb
+  - serverless-offline
+
+custom:
+  serverless-dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+    # Uncomment only if you already have a DynamoDB running locally
+    # noStart: true
+    # seed:
+    #   test:
+    #     sources:
+    #       - table: users
+    #         sources: [./seed/users.json]
+
+resources:
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: usersTable
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+functions:
+  users:
+    handler: services/user/get-user.getUser
+    events:
+      - http:
+          method: GET
+          path: users/{id}
+    handler: services/user/create-user.createUser
+    events:
+      - http:
+          method: GET
+          path: users/{id}
